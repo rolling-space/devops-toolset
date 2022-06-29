@@ -77,8 +77,6 @@ spec:
   
       WORKDIR /project
       
-      VOLUME ["/project/current", "/project/mnt", "/project/init"]
-  
       USER 10001
   triggers:
     - type: ImageChange
