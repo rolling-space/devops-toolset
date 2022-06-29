@@ -7,9 +7,10 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 RUN npm install -g quicktype postman-to-openapi
 RUN pip install openapi2jsonschema
 
-RUN mkdir -p /bench/input /bench/output
-VOLUME ["/bench/input", "/bench/output"]
+RUN mkdir -p /bench/input /bench/output /bench/current
+VOLUME ["/bench/input", "/bench/output", "/bench/current"]
 
 WORKDIR /bench
 
 USER 10001
+

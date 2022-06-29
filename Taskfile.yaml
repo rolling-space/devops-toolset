@@ -1,0 +1,61 @@
+version: 3
+
+tasks:
+  default: 
+    desc: Welcome to the project bootstrapper.
+    cmds:
+    - task -l
+    silent: true
+    vars:
+      OP_HOME: 
+        sh: "basename $PWD"
+
+  # osdk:doctor:
+  #   desc: |-
+  #     Checks local config
+  #   cmds:
+  #   - echo {{.GIT_COMMIT}}
+  #   preconditions:
+  #     - sh: "which git"
+  #       msg: "No git found"
+  #   vars:
+  #     OP_HOME: 
+  #       sh: basename "$PWD"
+  #     GIT_COMMIT: ""
+  #       # sh: git log -n 1 --format=%h
+
+  git:init:
+    desc: |-
+      Git inits the current folder
+    cmds:
+    - git init
+    - curl -L https://www.toptal.com/developers/gitignore/api/macos,linux,windows,visualstudiocode,vim,emacs,jetbrains+all,node,ruby,rails,go,helm,direnv,dotenv -o .gitignore
+    - echo -e "\nwarehouse/\n/*/**/secrets/\n" >> .gitignore
+    - cp .gitignore .dockerignore
+    - git add .
+    - git commit -m "First Commit"
+    preconditions:
+      - sh: "which curl"
+        msg: "No curl found"
+      - sh: "which git"
+        msg: "No git found"
+
+  k8s:init:
+    desc: |-
+      Localizes a kubeconfig
+    vars:
+      OP_HOME:
+        sh: basename "$PWD"
+    cmds:
+      - mkdir -p .kube
+      - echo "# generated" >> .kube/config
+      - echo "export KUBECONFIG=$PWD/.kube/config" >> .envrc
+      - direnv allow
+    status:
+      - test -d .kube
+      - test -f .kube/config
+    preconditions:
+      - sh: "which kubectl"
+        msg: "No kubectl found"
+      - sh: "which direnv"
+        msg: "No direnv found"
